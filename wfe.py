@@ -84,6 +84,7 @@ if output_type == "arff":
 			print "@attribute",attr,"string"
 	print "@data"
 else:
+	attrs.insert(0,"protocol_name")
 	print ','.join(attrs)
 
 for flow in flows.values():
