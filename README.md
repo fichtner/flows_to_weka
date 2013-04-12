@@ -10,3 +10,4 @@ HOW TO USE IT
 then you can import the CSV into R or ARFF into WEKA
 
 Author: v.pereira@packetwerk.de
+License: MIT
