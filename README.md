@@ -3,6 +3,12 @@ Wonka Flows Exporter
 
 Export pcap files with TCP traffic to TCP Flows and output it to WEKA or CSV
 
+Features being extracted:
+
+* delta between packet's arrival time
+* bytes transferred should it be a ratio between bytes transfered/number of packages
+* ratio push flag/total flags
+
 HOW TO USE IT
 
 ./wfe.py -i input.pcap -t csv|arff > output_file.extension
