@@ -1,6 +1,7 @@
 from scapy.all import *
 import scapy
 from numpy import *
+from kolmogorov import kolmogorov
 #We are assuming:
 #1) Its an IP packet
 #2) Its an TCP packet
@@ -28,6 +29,9 @@ class TCPStream:
 
 	def avrg_len(self):
 		return self.len/self.pkt_count
+
+	def kolmogorov(self):
+		return kolmogorov(self.payload)
 
 	def avrg_payload_len(self):
 		return len(self.payload)/self.pkt_count
