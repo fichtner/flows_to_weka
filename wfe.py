@@ -34,7 +34,7 @@ def lookup_stream(key,reverse_key):
 
 #I'm just using here, because I know my trace. Normally this function shouldn't use sport and dport. Instead a DPI engine 
 #HINT: appid https://code.google.com/p/appid/
-def port_to_name(sport,dport):
+def proto_name(sport,dport,use_dpi=False,payload=None):
 	if dport == 80 or sport == 80:
 		return "http"
 	if dport == 3306 or sport == 3306:
@@ -47,17 +47,18 @@ parser = argparse.ArgumentParser(description='Process a pcap file, generating th
 parser.add_argument('-i',help="pcap file to be readin",required=True)
 parser.add_argument('-o',help="output file to be written")
 parser.add_argument('-t',help="type of output arff or csv",default='arff',choices=['arff','csv'])
+#parser.add_argument("-d", help="run DPI", action="store_true")
 args = parser.parse_args()
 
 
-pcap_file = vars(args)['i']
-output_type = vars(args)['t']
+pcap_file = args.i
+output_type = args.t
 
 packets=rdpcap(pcap_file)
 
 flows = {}
 
-attrs = ['src','sport','dst','dport','proto','push_flag_ratio','average_len','pkt_count','flow_average_inter_arrival_time']
+attrs = ['src','sport','dst','dport','proto','push_flag_ratio','average_len','average_payload_len','pkt_count','flow_average_inter_arrival_time']
 #reduce it to TCP
 #TODO check if its possible to pack it again in the original class, that we are able to call .conversations() on this array
 packets = [ pkt for pkt in packets if IP in pkt for p in pkt if TCP in p ]
@@ -80,7 +81,7 @@ if output_type == "arff":
 	print "@attribute protocol-name","{ssh,http,mysql,unknown}"
 
 	for attr in attrs:
-		if attr in ['pkt_count','average_len','flow_average_inter_arrival_time','push_flag_ratio']:
+		if attr in ['pkt_count','average_len','flow_average_inter_arrival_time','push_flag_ratio','average_payload_len']:
 			print "@attribute",attr,"numeric"
 		else:
 			print "@attribute",attr,"string"
@@ -90,4 +91,4 @@ else:
 	print ','.join(attrs)
 
 for flow in flows.values():
-	print "%s,%s,%s,%s,%s,%s,%.3f,%s,%s,%s"%(port_to_name(flow.dport,flow.sport),flow.src,flow.sport,flow.dst,flow.dport,flow.proto,flow.push_flag_ratio(),flow.avrg_len(),flow.pkt_count,flow.avrg_inter_arrival_time())
+	print "%s,%s,%s,%s,%s,%s,%.3f,%s,%s,%s,%s"%(proto_name(flow.sport,flow.dport),flow.src,flow.sport,flow.dst,flow.dport,flow.proto,flow.push_flag_ratio(),flow.avrg_len(),flow.avrg_payload_len(),flow.pkt_count,flow.avrg_inter_arrival_time())
