@@ -9,9 +9,16 @@ Features being extracted:
 * bytes transferred should it be a ratio between bytes transfered/number of packages
 * ratio push flag/total flags
 
-HOW TO USE IT
+### HOW TO INSTALL
+```
+git clone https://github.com/fichtner/flows_to_weka.git
+cd flows_to_weka
+pip install -r requirements.txt
+```
 
-./wfe.py -i input.pcap -t csv|arff > output_file.extension
+### HOW TO USE IT
+
+`./wfe.py -i input.pcap -t csv|arff > output_file.extension`
 
 then you can import the CSV into R or ARFF into WEKA
 
